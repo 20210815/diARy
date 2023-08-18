@@ -1,6 +1,8 @@
 package com.example.diary
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -135,6 +137,15 @@ class AddPlanMapActivity : AppCompatActivity() {
         @JavascriptInterface
         fun addPlaceIn() {
             Log.d("mylog", "add successed")
+
+            intent.putExtra("placeInfo", title + "\n" + address)
+            intent.putExtra("planInfo-dateS", dateS)
+            intent.putExtra("planInfo-dateE", dateE)
+            intent.putExtra("planInfo-timeS", timeS)
+            intent.putExtra("planInfo-timeE", timeE)
+
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         }
     }
 }

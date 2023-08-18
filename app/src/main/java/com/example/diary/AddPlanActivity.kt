@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.DatePicker
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.aqoong.lib.hashtagedittextview.HashTagEditTextView
 import com.example.diary.PlanManager.sendPlanToServer
 import com.example.diary.databinding.ActivityAddPlanBinding
@@ -21,6 +24,10 @@ import java.util.Locale
 class AddPlanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddPlanBinding
 
+    // 여행지 데이터를 저장할 리스트
+    private val planPlaceList = mutableListOf<DiaryPlaceModel>()
+    //private val planPlaceAdapter = PlanAdapter()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +35,16 @@ class AddPlanActivity : AppCompatActivity() {
         binding = ActivityAddPlanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //toolbar
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)  //툴바에 뒤로 가기 버튼 추가
+
+        //RecyclerView
+        binding.planDetailRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@AddPlanActivity)
+            //adapter =
+        }
 
         binding.planDateStart.setOnClickListener {
             val datePickerDialog = DatePickerDialog(this, object: DatePickerDialog.OnDateSetListener{
@@ -60,11 +74,16 @@ class AddPlanActivity : AppCompatActivity() {
             finish() // 현재 액티비티 종료
         }
 
+        //extension button 실행 후,
+        val requestLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+            //adapter.notifyDataSetChanged()
+        }
+
         //extension button
         binding.placeAddNew.setOnClickListener {
             val intent = Intent(this, AddPlanMapActivity::class.java)
-            startActivity(intent)
-            //requestLauncher.launch(intent) : 인텐트를 보내어 result로 데이터를 다시 받아옴
+            requestLauncher.launch(intent) //인텐트를 보내어 result로 데이터를 다시 받아옴
             //->setResult(Activity.RESULT_OK, intent)
             //->finish()
         }
