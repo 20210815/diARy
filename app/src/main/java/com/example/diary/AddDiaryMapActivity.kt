@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.app.ProgressDialog.show
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -101,6 +102,8 @@ class AddDiaryMapActivity : AppCompatActivity() {
         var timeS: Array<Int>? = null
         var timeE: Array<Int>? = null
 
+        val itemPosition = intent.getIntExtra("itemPosition", -1)
+
         @JavascriptInterface
         fun showToast(toast: String) {
             Log.d("mylog", toast)
@@ -144,6 +147,19 @@ class AddDiaryMapActivity : AppCompatActivity() {
         @JavascriptInterface
         fun addPlaceIn() {
             Log.d("mylog", "add successed")
+
+            // 데이터를 이전 활동으로 전달하기 위한 인텐트 생성
+            val intent = Intent()
+            intent.putExtra("itemPosition", itemPosition) // position 전달
+            intent.putExtra("enteredPlace", title)
+            intent.putExtra("enteredDate", dateS)
+            intent.putExtra("enteredStart", timeS)
+            intent.putExtra("enteredEnd", timeE)
+
+
+            // 결과를 설정하고 현재 활동 종료
+            setResult(Activity.RESULT_OK, intent)
+            finish()
         }
     }
 }

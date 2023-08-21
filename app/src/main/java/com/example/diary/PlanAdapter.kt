@@ -53,7 +53,8 @@ class PlanAdapter(private var plans: List<MyPlan>) : RecyclerView.Adapter<PlanAd
                 planLikeImeView.visibility = View.GONE
                 planLikeView.text = "비공개"
             } else {
-
+                planLikeImeView.visibility = View.VISIBLE
+                planLikeView.text = "1" //일정 좋아요 수 (수정 필요)
             }
         }
     }

@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="170dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/cloud" />
+            android:src="@drawable/example" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -80,7 +80,7 @@
         android:id="@+id/diaryRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="480dp"
-        android:padding="15dp"
+        android:padding="8dp"
         android:layout_marginTop="10dp" />
 
 </LinearLayout>

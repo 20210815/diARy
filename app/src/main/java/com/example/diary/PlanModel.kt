@@ -9,12 +9,13 @@ data class Plan(
     val content: String,
     val travelStart: Date,
     val travelEnd: Date,
-    val Public: Boolean
+    val public: Boolean
 )
 
 data class Location(
     val date: Date,
-    val time: Time,
+    val timeStart: Time,
+    val timeEnd: Time,
     val name: String,
     val address: String
 )
@@ -59,7 +60,7 @@ data class User(
 data class MyPlanListResponse(
     val user: User,
     val plan: MyPlan,
-    val locations: List<Any>,
+    val locations: List<LocationDetail>,
     val tags: List<MyTag>
 )
 

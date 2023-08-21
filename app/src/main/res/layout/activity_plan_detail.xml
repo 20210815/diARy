@@ -43,15 +43,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="♥ "
-                android:textSize="13dp"/>
+                android:textSize="18dp"/>
 
             <TextView
                 android:id="@+id/plan_detail_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="0"
-                android:textSize="13dp"/>
+                android:text="1"
+                android:textSize="18dp"/>
 
         </LinearLayout>
 

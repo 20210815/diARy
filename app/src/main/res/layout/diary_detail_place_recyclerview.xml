@@ -36,11 +36,34 @@
                     android:textSize="20dp" />
 
                 <TextView
-                    android:id="@+id/diary_detail_place_time"
+                    android:id="@+id/diary_place_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:text="날짜 출발시간 ~ 도착시간"
+                    android:text="날짜"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/diary_place_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="출발시간"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text=" ~ "
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/diary_place_end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="도착시간"
                     android:textSize="13dp" />
 
             </LinearLayout>

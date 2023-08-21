@@ -8,7 +8,7 @@ import com.example.diary.databinding.PlanDetailRecyclerviewBinding
 
 class PlanDetailViewHolder(val binding: PlanDetailRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root)
 
-class PlanDetailAdapter(val context: Context, val itemList: MutableList<PlanDetailModel>): RecyclerView.Adapter<PlanDetailViewHolder>() {
+class PlanDetailAdapter(private val itemList: MutableList<PlanDetailModel>): RecyclerView.Adapter<PlanDetailViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlanDetailViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -23,11 +23,17 @@ class PlanDetailAdapter(val context: Context, val itemList: MutableList<PlanDeta
         val data = itemList.get(position)
 
         holder.binding.run {
-            placeTime.text = data.time
+            placeTime.text = "${data.placeStart} ~ ${data.placeEnd}"
             placeName.text = data.place
         }
 
         //이미지 불러오기 추가 필요
 
+    }
+
+    fun updateData(newItems: List<PlanDetailModel>) {
+        itemList.clear()
+        itemList.addAll(newItems)
+        notifyDataSetChanged()
     }
 }

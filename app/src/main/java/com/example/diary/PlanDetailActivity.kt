@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diary.databinding.ActivityAddPlanBinding
 import com.example.diary.databinding.ActivityPlanDetailBinding
 import java.text.SimpleDateFormat
@@ -13,6 +14,11 @@ import java.util.*
 class PlanDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlanDetailBinding
     private var planId = -1 //현재 플랜ID를 담는 변수
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+    // 여행지 데이터를 저장할 리스트
+    private val planPlaceList = mutableListOf<PlanDetailModel>()
+    private val planDetailAdapter = PlanDetailAdapter(planPlaceList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +28,11 @@ class PlanDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)  //툴바에 뒤로 가기 버튼 추가
+
+        binding.planDetailRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@PlanDetailActivity)
+            adapter = planDetailAdapter
+        }
 
         planId = intent.getIntExtra("planId", -1)
 
@@ -43,6 +54,21 @@ class PlanDetailActivity : AppCompatActivity() {
                     val formattedEndDate = dateFormatter.format(planDetail.plan.travelEnd)
 
                     binding.planDetailMyDate.text = "$formattedStartDate ~ $formattedEndDate"
+
+                    val planDetailModels: List<PlanDetailModel> = planDetail.locations.map { locationDetail ->
+                        val formattedStartTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(locationDetail.timeStart)
+                        val formattedEndTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(locationDetail.timeEnd)
+
+                        PlanDetailModel(
+                            place = locationDetail.name,
+                            address = locationDetail.address,
+                            placeDate = locationDetail.date,
+                            placeStart = formattedStartTime, // timeStart를 원하는 형식으로 변환
+                            placeEnd = formattedEndTime    // timeEnd를 원하는 형식으로 변환
+                        )
+                    }
+
+                    planDetailAdapter.updateData(planDetailModels)
 
                     //같지 않다면, 수정/삭제 gone, 정보레이아웃 visible 필요
 

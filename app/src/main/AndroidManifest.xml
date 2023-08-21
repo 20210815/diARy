@@ -15,9 +15,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".AddPlaceInPlanActivity"
-            android:exported="false" />
-        <activity
             android:name=".AddPlanMapActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
@@ -38,6 +35,15 @@
             android:name=".PlanDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.DiARy.NoActionBar" />
+        <activity
+            android:name=".AddDiaryMapActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false"
+            tools:ignore="DuplicateActivity" />
+        <activity
+            android:name=".RoadMapActivity"
+            android:exported="false"
+            tools:ignore="DuplicateActivity" />
         <activity
             android:name=".AddPlaceInDiaryActivity"
             android:exported="false"

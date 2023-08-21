@@ -94,6 +94,8 @@ class AddPlanMapActivity : AppCompatActivity() {
         var timeS: Array<Int>? = null
         var timeE: Array<Int>? = null
 
+        val itemPosition = intent.getIntExtra("itemPosition", -1)
+
         @JavascriptInterface
         fun showToast(toast: String) {
             Log.d("mylog", toast)
@@ -126,10 +128,10 @@ class AddPlanMapActivity : AppCompatActivity() {
 
             dialog.setOnClickedListener(object: AddDiaryMapDialog.ButtonClickListener {
                 override fun onClicked(dateS_d: Array<Int>, dateE_d: Array<Int>, timeS_d: Array<Int>, timeE_d: Array<Int>) {
-                    dateS = dateS_d
+                    dateS = dateS_d //날짜
                     dateE = dateE_d
-                    timeS = timeS_d
-                    timeE = timeE_d
+                    timeS = timeS_d //출발 시간
+                    timeE = timeE_d //도착 시간
                 }
             })
         }
@@ -144,6 +146,24 @@ class AddPlanMapActivity : AppCompatActivity() {
             intent.putExtra("planInfo-timeS", timeS)
             intent.putExtra("planInfo-timeE", timeE)
 
+
+            Log.d("mylog", "add successed" + title + address + tel + dateS  + timeS + timeE)
+
+            val placeDate = "${dateS?.get(0)}-${dateS?.get(1)}-${dateS?.get(2)}"
+            val placeStart = "${timeS?.get(0)}:${timeS?.get(1)}"
+            val placeEnd = "${timeE?.get(0)}:${timeE?.get(1)}"
+
+            // 데이터를 이전 활동으로 전달하기 위한 인텐트 생성
+            val intent = Intent()
+            intent.putExtra("itemPosition", itemPosition) // position 전달
+            intent.putExtra("enteredPlace", this.title)
+            intent.putExtra("enteredAddress", this.address)
+            intent.putExtra("enteredTel", this.tel)
+            intent.putExtra("enteredDateS", placeDate)
+            intent.putExtra("enteredTimeS", placeStart)
+            intent.putExtra("enteredTimeE", placeEnd)
+
+            // 결과를 설정하고 현재 활동 종료
             setResult(Activity.RESULT_OK, intent)
             finish()
         }

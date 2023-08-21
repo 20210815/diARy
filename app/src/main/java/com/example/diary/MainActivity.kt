@@ -71,6 +71,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             return true
         }
 
+        if (item.itemId == R.id.toolbar_auth) {
+            val intent = Intent(this, LogInActivity::class.java)
+            startActivity(intent)
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
