@@ -1,7 +1,9 @@
 package com.example.diary
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -55,6 +57,10 @@ class AddDiaryActivity : AppCompatActivity() {
                 val data = result.data
                 val position = data?.getIntExtra("itemPosition", -1)
                 val enteredText = data?.getStringExtra("enteredText")
+                val place = data?.getStringExtra("place")
+                val placeDate = data?.getStringExtra("date")
+                val placeTimeS = data?.getStringExtra("timeStart")
+                val placeTimeE = data?.getStringExtra("timeEnd")
                 val imageUris = data?.getParcelableArrayListExtra<Uri>("imageUris")
                 Log.d("리사이클러뷰", ""+position)
 
@@ -62,12 +68,17 @@ class AddDiaryActivity : AppCompatActivity() {
                     val item = diaryPlaceList[position]
                     item.content = enteredText
                     item.imageUris = imageUris
+                    item.place = place
+                    item.placeDate = placeDate
+                    item.placeTimeS = placeTimeS
+                    item.placeTimeE = placeTimeE
                     diaryPlaceAdapter.notifyItemChanged(position)
                 } else {
                     if (!enteredText.isNullOrEmpty() || imageUris != null) {
                         // DiaryPlaceModel 인스턴스를 생성하고 리스트에 추가
                         val newDiaryPlaceModel =
-                            DiaryPlaceModel(content = enteredText, imageUris = imageUris)
+                            DiaryPlaceModel(content = enteredText, imageUris = imageUris, place = place,
+                            placeDate = placeDate, placeTimeS = placeTimeS, placeTimeE = placeTimeE)
                         diaryPlaceList.add(newDiaryPlaceModel)
 
                         // 특정 아이템을 리스트의 맨 마지막으로 이동시키는 함수 호출
@@ -80,24 +91,31 @@ class AddDiaryActivity : AppCompatActivity() {
             }
         }
 
-        // AddPlaceInDiaryActivity를 시작하기 위한 요청 코드 정의
+        // AddDiaryMapActivity를 시작하기 위한 요청 코드 정의
         addPlaceActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data = result.data
                 val position = data?.getIntExtra("itemPosition", -1)
                 val enteredPlace = data?.getStringExtra("enteredPlace")
+                val enteredDate = data?.getStringExtra("enteredDate")
+                val enteredTimeS = data?.getStringExtra("enteredStart")
+                val enteredTimeE = data?.getStringExtra("enteredEnd")
 
-                Log.d("리사이클러뷰", ""+position)
+                Log.d("지도 이후 AddDiary에서 추가", ""+position + enteredPlace + enteredDate + enteredTimeS + enteredTimeE)
 
                 if (position != null && position >= 0) {
                     val item = diaryPlaceList[position]
                     item.place = enteredPlace
+                    item.placeDate = enteredDate
+                    item.placeTimeS = enteredTimeS
+                    item.placeTimeE = enteredTimeE
                     diaryPlaceAdapter.notifyItemChanged(position)
                 } else {
                     if (!enteredPlace.isNullOrEmpty()) {
                         // DiaryPlaceModel 인스턴스를 생성하고 리스트에 추가
                         val newDiaryPlaceModel =
-                            DiaryPlaceModel(place = enteredPlace)
+                            DiaryPlaceModel(place = enteredPlace,
+                                placeDate = enteredDate, placeTimeS = enteredTimeS, placeTimeE = enteredTimeE)
                         diaryPlaceList.add(newDiaryPlaceModel)
 
                         // 특정 아이템을 리스트의 맨 마지막으로 이동시키는 함수 호출
@@ -108,10 +126,25 @@ class AddDiaryActivity : AppCompatActivity() {
                     }
                 }
 
-                val intent2 = Intent(this, AddPlaceInDiaryActivity::class.java)
-                intent.putExtra("itemPosition", position) // position 전달
-                intent.putExtra("enteredPlace", title)
-                addContentActivityResult.launch(intent2)
+//                val intent = Intent(this, AddPlaceInDiaryActivity::class.java)
+//                intent.putExtra("itemPosition", position) // position 전달
+//                intent.putExtra("place", enteredPlace)
+//                intent.putExtra("date", enteredDate)
+//                intent.putExtra("timeStart", enteredTimeS)
+//                intent.putExtra("timeEnd", enteredTimeE)
+//
+//                addContentActivityResult.launch(intent)
+
+//                if (isActivityOpen(AddPlaceInDiaryActivity::class.java)) {
+//                    // 이미 Activity가 열려 있는 경우 해당 활동으로 이동
+//                    val intent = Intent(this, AddPlaceInDiaryActivity::class.java)
+//                    intent.putExtra("itemPosition", position) // position 전달
+//                    intent.putExtra("place", enteredPlace)
+//                    addContentActivityResult.launch(intent)
+//                } else {
+//                    // AddDiaryMapActivity가 열려 있지 않은 경우 새로운 활동 시작
+//                    addContentActivityResult.launch(Intent(this, AddPlaceInDiaryActivity::class.java))
+//                }
             }
         }
 
@@ -166,8 +199,9 @@ class AddDiaryActivity : AppCompatActivity() {
             viewModel.enteredClosed = binding.diaryAddLockBtn.isChecked
 
             //val intent = Intent(this, AddPlaceInDiaryActivity::class.java)
-            val intent1 = Intent(this, AddDiaryMapActivity::class.java)
-            addPlaceActivityResult.launch(intent1)
+            val intent = Intent(this, AddDiaryMapActivity::class.java)
+            intent.putExtra("itemPosition", -1)
+            addPlaceActivityResult.launch(intent)
             //startActivity(intent)
             //startActivityForResult(intent, ADD_PLACE_REQUEST_CODE)
             //addPlaceActivityResult.launch(intent)
@@ -199,6 +233,27 @@ class AddDiaryActivity : AppCompatActivity() {
         }
 
         binding.diaryAddLockBtn.isChecked = viewModel.enteredClosed
+    }
+
+    // 이미 열려 있는 활동 확인하는 함수
+    private fun isActivityOpen(activityClass: Class<*>): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningActivities = activityManager.runningAppProcesses
+        if (runningActivities != null) {
+            for (processInfo in runningActivities) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    try {
+                        val activityName = processInfo.pkgList[0]
+                        if (activityName == activityClass.canonicalName) {
+                            return true
+                        }
+                    } catch (e: Exception) {
+                        // 예외 처리
+                    }
+                }
+            }
+        }
+        return false
     }
 
     private fun saveDiaryToServer() {
@@ -247,13 +302,13 @@ class AddDiaryActivity : AppCompatActivity() {
             }
 
             val placeTimeStart: Time = try {
-                java.sql.Time(timeFormat.parse(item.placeStart).time)
+                java.sql.Time(timeFormat.parse(item.placeTimeS).time)
             } catch (e: Exception) {
                 java.sql.Time(System.currentTimeMillis())
             }
 
             val placeTimeEnd: Time = try {
-                java.sql.Time(timeFormat.parse(item.placeEnd).time)
+                java.sql.Time(timeFormat.parse(item.placeTimeE).time)
             } catch (e: Exception) {
                 java.sql.Time(System.currentTimeMillis())
             }

@@ -10,6 +10,9 @@ import java.util.*
 
 class MyApplication {
     val retrofit = Retrofit.Builder()
+        .baseUrl("http:/192.168.219.192:8080/") // 서버 임시 URL(로컬)
+        .addConverterFactory(GsonConverterFactory.create(getGson()))
+        .build()
 
     fun getGson(): Gson {
         val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault()) // 원하는 시간 형식 지정

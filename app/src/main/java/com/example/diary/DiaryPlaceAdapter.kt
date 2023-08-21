@@ -39,15 +39,23 @@ class DiaryPlaceAdapter (private val itemList: MutableList<DiaryPlaceModel>) :
 
         init {
             binding.diaryCardView.setOnClickListener {
+
+
                 val item = itemList[adapterPosition] // 클릭된 아이템
                 val intent = Intent(itemView.context, AddPlaceInDiaryActivity::class.java)
                 Log.d("어댑터", ""+adapterPosition)
                 intent.putExtra("itemPosition", adapterPosition) // position 전달
                 intent.putExtra("place", item.place)
+                intent.putExtra("date", item.placeDate)
+                intent.putExtra("timeS", item.placeTimeS)
+                intent.putExtra("timeE", item.placeTimeE)
                 intent.putExtra("content", item.content)
                 intent.putParcelableArrayListExtra("imageUris", item.imageUris)
                 //itemView.context.startActivity(intent)
-                AddDiaryActivity.addPlaceActivityResult.launch(intent)
+
+                Log.d("mylog", "여행지 정보 in 지도" + adapterPosition + item.place + item.placeDate
+                        + item.placeTimeS +item.placeTimeE)
+                AddDiaryActivity.addContentActivityResult.launch(intent)
             }
         }
 
@@ -56,6 +64,9 @@ class DiaryPlaceAdapter (private val itemList: MutableList<DiaryPlaceModel>) :
             //Log.d(TAG, "Item content: ${item.content}")
             if(item.place != null) {
                 binding.diaryDetailPlace.text = item.place
+                binding.diaryPlaceDate.text = item.placeDate
+                binding.diaryPlaceStartTime.text = item.placeTimeS
+                binding.diaryPlaceEndTime.text = item.placeTimeE
             }
 
             binding.placeContent.text = item.content ?: "클릭하여 여행지별 일기를 기록하세요."

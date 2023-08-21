@@ -46,9 +46,14 @@ class AddPlaceInDiaryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)  //툴바에 뒤로 가기 버튼 추가
 
         val itemPosition = intent.getIntExtra("itemPosition", -1)
-        Log.d("여행지추가", ""+itemPosition)
         val place = intent.getStringExtra("place")
+        val placeDate = intent.getStringExtra("date")
+        val placeTimeS = intent.getStringExtra("timeStart")
+        val placeTimeE = intent.getStringExtra("timeEnd")
         var content = intent.getStringExtra("content")
+
+        Log.d("여행지추가", ""+itemPosition+place+content)
+
         uriList = intent.getParcelableArrayListExtra<Uri>("imageUris")?: ArrayList()
 
         if (place == "MEMO") {
@@ -60,8 +65,11 @@ class AddPlaceInDiaryActivity : AppCompatActivity() {
             content = null
         }
 
+        val placeTime = "$placeDate $placeTimeS ~ $placeTimeE"
+
         // 여행지 정보를 텍스트뷰에 표시
         binding.placeInDiaryTitle.setText(place)
+        binding.placeInDiaryTime.setText(placeTime)
         binding.placeInDiaryContent.setText(content)
 
         // 이미지 리사이클러뷰 초기화 및 어댑터 연결
@@ -92,7 +100,13 @@ class AddPlaceInDiaryActivity : AppCompatActivity() {
             //intent.putExtra("position", position)  // 수정 중인 아이템의 위치 정보 전달
             intent.putExtra("itemPosition", itemPosition) // position 전달
             intent.putExtra("enteredText", enteredText)
+            intent.putExtra("place", place)
+            intent.putExtra("date", placeDate)
+            intent.putExtra("timeStart", placeTimeS)
+            intent.putExtra("timeEnd", placeTimeE)
             intent.putParcelableArrayListExtra("imageUris", uriList)
+
+            Log.d("mylog", "AddPlaceInDiary에서 완료 클릭" + itemPosition + title + placeDate + placeTimeS +placeTimeE)
 
             // 결과를 설정하고 현재 활동 종료
             setResult(Activity.RESULT_OK, intent)

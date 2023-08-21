@@ -148,14 +148,19 @@ class AddDiaryMapActivity : AppCompatActivity() {
         fun addPlaceIn() {
             Log.d("mylog", "add successed")
 
+            val placeDate = "${dateS?.get(0)}-${dateS?.get(1)}-${dateS?.get(2)}"
+            val placeStart = "${timeS?.get(0)}:${timeS?.get(1)}"
+            val placeEnd = "${timeE?.get(0)}:${timeE?.get(1)}"
+
             // 데이터를 이전 활동으로 전달하기 위한 인텐트 생성
             val intent = Intent()
             intent.putExtra("itemPosition", itemPosition) // position 전달
             intent.putExtra("enteredPlace", title)
-            intent.putExtra("enteredDate", dateS)
-            intent.putExtra("enteredStart", timeS)
-            intent.putExtra("enteredEnd", timeE)
+            intent.putExtra("enteredDate", placeDate)
+            intent.putExtra("enteredStart", placeStart)
+            intent.putExtra("enteredEnd", placeEnd)
 
+            Log.d("mylog", "여행지 정보 in 지도" + itemPosition + title + placeDate + placeStart +placeEnd)
 
             // 결과를 설정하고 현재 활동 종료
             setResult(Activity.RESULT_OK, intent)
