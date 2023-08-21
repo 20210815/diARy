@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MyApplication {
     val retrofit = Retrofit.Builder()
-        .baseUrl("http:/172.30.1.86:8080/") // 서버 임시 URL(로컬)
+        .baseUrl("http:/192.168.219.160:8080/") // 서버 임시 URL(로컬)
         .addConverterFactory(GsonConverterFactory.create(getGson()))
         .build()
 
